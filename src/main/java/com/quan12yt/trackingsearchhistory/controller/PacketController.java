@@ -16,6 +16,8 @@ public class PacketController {
 
     @GetMapping("/do")
     public void getURL() throws PcapNativeException, NotOpenException, UnknownHostException {
-       packetService.getPacket();
-    };
+        packetService.getPacket();
+    }
+
+    ;
 }

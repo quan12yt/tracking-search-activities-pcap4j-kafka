@@ -1,6 +1,7 @@
 package com.quan12yt.trackingsearchhistory.service;
 
 import com.quan12yt.trackingsearchhistory.dto.SearchRecord;
+import com.quan12yt.trackingsearchhistory.exception.NetworkNotFoundException;
 import com.quan12yt.trackingsearchhistory.util.Pcap4jUtil;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.IpV4Packet;
@@ -20,25 +21,22 @@ public class PacketService {
     final String topic = "tracking-topic";
     final String ipAddress = "174.16.10.128";
 
+    // send time and hostname of facebook activities to kafka consumer
     public void getPacket() throws PcapNativeException, UnknownHostException, NotOpenException {
         PcapNetworkInterface device = Pcap4jUtil.getNetworkDevice(ipAddress);
         System.out.println("Device info: " + device);
 
         if (device == null) {
-            System.out.println("No device chosen.");
-            System.exit(1);
+            throw new NetworkNotFoundException("Ip address not valid");
         }
         // Open the device and get a handle
         int snapshotLength = 65536; // in bytes
         int readTimeout = 10; // in milliseconds
         final PcapHandle handle;
         handle = device.openLive(snapshotLength, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, readTimeout);
-        PcapDumper dumper = handle.dumpOpen("out.pcap");
-
         // Set a filter to only listen for tcp packets on port 443 (HTTPS)
         String filter = "tcp port 443";
         handle.setFilter(filter, BpfProgram.BpfCompileMode.OPTIMIZE);
-
         // Create a listener that defines what to do with the received packets
         PacketListener listener = new PacketListener() {
             @Override
@@ -65,7 +63,6 @@ public class PacketService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        dumper.close();
         handle.close();
     }
 }

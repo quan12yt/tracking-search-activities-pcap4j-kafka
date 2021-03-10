@@ -21,7 +21,7 @@ public class SearchHistoryController {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager
                     .getConnection("jdbc:sqlite:/C:\\Users\\quan.pham\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\History");
-            if(connection.isClosed()){
+            if (connection.isClosed()) {
                 return;
             }
             statement = connection.createStatement();

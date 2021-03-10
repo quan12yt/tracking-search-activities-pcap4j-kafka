@@ -15,7 +15,6 @@ import java.util.Map;
 @Configuration
 public class ProducerConfig {
 
-
     public ProducerFactory<String, SearchRecord> producerFactory() {
         Map<String, Object> prop = new HashMap<>();
         prop.put(org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
