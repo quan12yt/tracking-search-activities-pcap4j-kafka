@@ -1,4 +1,4 @@
-package com.quan12yt.trackingsearchhistory.unittest;
+package com.quan12yt.trackingsearchhistory.unittest.service;
 
 import com.quan12yt.trackingsearchhistory.TrackingSearchHistoryApplication;
 import com.quan12yt.trackingsearchhistory.service.PacketService;

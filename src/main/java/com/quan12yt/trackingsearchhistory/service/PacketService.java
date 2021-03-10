@@ -27,7 +27,7 @@ public class PacketService {
         System.out.println("Device info: " + device);
 
         if (device == null) {
-            throw new NetworkNotFoundException("Ip address not valid");
+            throw new NetworkNotFoundException("IpAddress not valid");
         }
         // Open the device and get a handle
         int snapshotLength = 65536; // in bytes
