@@ -19,16 +19,17 @@ public class PacketService {
     @Autowired
     KafkaTemplate<String, SearchRecord> kafkaTemplate;
     final String topic = "tracking-topic";
-    final String ipAddress = "174.16.10.128";
+    @Autowired
+    Pcap4jUtil pcap4jUtil;
+//    final String ipAddress = "174.16.10.128";
 
     // send time and hostname of facebook activities to kafka consumer
-    public void getPacket() throws PcapNativeException, UnknownHostException, NotOpenException {
-        PcapNetworkInterface device = Pcap4jUtil.getNetworkDevice(ipAddress);
-        System.out.println("Device info: " + device);
-
+    public void getPacket(String ipAddress) throws PcapNativeException, UnknownHostException, NotOpenException {
+        PcapNetworkInterface device = pcap4jUtil.getNetworkDevice(ipAddress);
         if (device == null) {
             throw new NetworkNotFoundException("IpAddress not valid");
         }
+        System.out.println("Device info: " + device);
         // Open the device and get a handle
         int snapshotLength = 65536; // in bytes
         int readTimeout = 10; // in milliseconds
