@@ -1,19 +1,23 @@
-package com.quan12yt.trackingsearchhistory.service;
+package com.quan12yt.trackingsearchhistory.config;
+
+import com.quan12yt.trackingsearchhistory.dto.SearchRecord;
+import com.quan12yt.trackingsearchhistory.util.ValueConstant;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.*;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ProxyHandler extends Thread {
 
-    public static final Pattern CONNECT_PATTERN = Pattern.compile("CONNECT (.+):(.+) HTTP/(1\\.[01])",
-            Pattern.CASE_INSENSITIVE);
     private Socket clientSocket;
     private boolean previousWasR = false;
+    KafkaTemplate<String, SearchRecord> kafkaTemplate;
+    final String username = System.getProperty("user.name");
 
-
-    public ProxyHandler(Socket clientSocket) {
+    public ProxyHandler(Socket clientSocket, KafkaTemplate<String, SearchRecord> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
         this.clientSocket = clientSocket;
     }
 
@@ -21,8 +25,8 @@ public class ProxyHandler extends Thread {
     public void run() {
         try {
             String request = readLine(clientSocket);
-            System.out.println("" + request);
-            Matcher matcher = CONNECT_PATTERN.matcher(request);
+            kafkaTemplate.send("search-topic", new SearchRecord(username, LocalDateTime.now().toString(), request.substring(8)));
+            Matcher matcher = ValueConstant.CONNECT_PATTERN.matcher(request);
             if (matcher.matches()) {
                 String header;
                 do {

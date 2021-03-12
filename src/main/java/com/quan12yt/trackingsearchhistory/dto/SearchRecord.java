@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchRecord {
 
+    private String username;
     private String timestamp;
     private String url;
 }

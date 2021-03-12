@@ -19,6 +19,7 @@ public class PacketService {
     @Autowired
     KafkaTemplate<String, SearchRecord> kafkaTemplate;
     final String topic = "tracking-topic";
+    final String username = System.getProperty("user.name");
     @Autowired
     Pcap4jUtil pcap4jUtil;
 //    final String ipAddress = "174.16.10.128";
@@ -52,7 +53,7 @@ public class PacketService {
                 }
                 String host = addr.getHostName();
                 if (host.contains("facebook.com")) {
-                    SearchRecord ms = new SearchRecord(LocalDateTime.now().toString(), host);
+                    SearchRecord ms = new SearchRecord(username, LocalDateTime.now().toString(), host);
                     kafkaTemplate.send(topic, ms);
                 }
             }
